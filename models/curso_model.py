@@ -6,6 +6,8 @@ from typing import Optional
 class CursoModel(settings.DBBaseModel):
     __tablename__ = "cursos"
     
+    #fiz a alteração colocando direto no model o Opitional
+    
     id: Optional[int] = Column(Integer, primary_key=True, autoincrement=True)
     titulo: str = Column(String(100))
     aulas: int = Column(Integer)
