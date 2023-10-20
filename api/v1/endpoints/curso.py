@@ -13,7 +13,11 @@ router = APIRouter()
 
 
 # POST Curso
-@router.post('/', status_code=status.HTTP_201_CREATED, response_model=CursoSchema)
+@router.post('/', status_code=status.HTTP_201_CREATED, 
+        response_model=CursoSchema,
+        description='Envia um novo curso para cadastrar.', 
+        summary="Cria um novo curso.", 
+        response_description="Curso criado com sucesso." )
 async def post_curso(curso: CursoSchema, db: AsyncSession = Depends(get_session)):
     novo_curso = CursoModel(titulo=curso.titulo, aulas=curso.aulas, horas=curso.horas)    
     db.add(novo_curso)
@@ -24,7 +28,10 @@ async def post_curso(curso: CursoSchema, db: AsyncSession = Depends(get_session)
 
 
 # GET Cursos
-@router.get('/', response_model=List[CursoSchema])
+@router.get('/', response_model=List[CursoSchema],
+        description='Retorna todos os cursos ou uma lista vazia.', 
+        summary="Retorna todos os cursos.", 
+        response_description="Cursos encontrados com sucesso.")
 async def get_cursos(db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(CursoModel)
@@ -36,7 +43,11 @@ async def get_cursos(db: AsyncSession = Depends(get_session)):
     
     
 # GET Curso
-@router.get('/{curso_id}', response_model=CursoSchema, status_code=status.HTTP_200_OK)
+@router.get('/{curso_id}', response_model=CursoSchema, 
+        status_code=status.HTTP_200_OK,
+        description='Retorna o curso informado ou detalhamento de não encontrado.', 
+        summary='Retorna o curso informado.', 
+        response_description="Curso encontrado com sucesso.")
 async def get_cursos(curso_id: int, db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(CursoModel).filter(CursoModel.id == curso_id)
@@ -51,7 +62,11 @@ async def get_cursos(curso_id: int, db: AsyncSession = Depends(get_session)):
         
         
 # PUT Curso
-@router.put('/{curso_id}', response_model=CursoSchema, status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{curso_id}', response_model=CursoSchema, 
+        status_code=status.HTTP_202_ACCEPTED,
+        description='Retorna os dados do curso informado para alteração ou curso não encontrado.', 
+        summary='Altera o curso informado.', 
+        response_description="Curso alterado com sucesso." )
 async def put_curso(curso_id: int, curso: CursoSchema, db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(CursoModel).filter(CursoModel.id == curso_id)
@@ -70,10 +85,12 @@ async def put_curso(curso_id: int, curso: CursoSchema, db: AsyncSession = Depend
             raise HTTPException(detail="Curso não encontrado.", status_code=status.HTTP_404_NOT_FOUND)
         
     
-
         
 # DELETE Curso
-@router.delete('/{curso_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{curso_id}', status_code=status.HTTP_204_NO_CONTENT,
+        description='Envia um curso para ser deletado.', 
+        summary="Deleta o curso informado.",          
+        response_description="Curso deletado com sucesso.")
 async def delete_curso(curso_id: int, db: AsyncSession = Depends(get_session)):
     async with db as session:
         query = select(CursoModel).filter(CursoModel.id == curso_id)
